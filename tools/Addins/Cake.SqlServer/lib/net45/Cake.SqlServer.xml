@@ -1,0 +1,333 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cake.SqlServer</name>
+    </assembly>
+    <members>
+        <member name="M:Cake.SqlServer.Sql.EscapeName(System.String)">
+            <summary>
+            Performance-optimized SQL-safe name.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:Cake.SqlServer.LocalDbAliases" -->
+        <member name="M:Cake.SqlServer.LocalDbAliases.LocalDbCreateInstance(Cake.Core.ICakeContext,System.String,Cake.SqlServer.LocalDbVersion)">
+            <summary>
+            Creates a server instance and starts the server. 
+            </summary>
+            <param name="context">Cake context</param>
+            <param name="instanceName">Name of the instance to create</param>
+            <param name="version">Version number of LocalDB to use V11 or V12.  The specified version must be installed on the computer. If not specified, the version number defaults to the version of the SqlLocalDB utility</param>
+            <example>
+            <code>
+                #addin "nuget:?package=Cake.SqlServer"
+            
+                Task("Create-LocalDB")
+                     .Does(() =>
+                     {
+                        LocalDbCreateInstance("Cake-Test", LocalDbVersion.V11);
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Cake.SqlServer.LocalDbAliases.LocalDbCreateInstance(Cake.Core.ICakeContext,System.String)">
+            <summary>
+            Creates a server instance and starts the server. 
+            The version number defaults to the version of the SqlLocalDB utility
+            </summary>
+            <param name="context">Cake context</param>
+            <param name="instanceName">Name of the instance to create</param>
+            <example>
+            <code>
+                #addin "nuget:?package=Cake.SqlServer"
+            
+                Task("Create-LocalDB")
+                     .Does(() =>
+                     {
+                        LocalDbCreateInstance("Cake-Test");
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Cake.SqlServer.LocalDbAliases.LocalDbDeleteInstance(Cake.Core.ICakeContext,System.String)">
+            <summary>
+            Deletes the LocalDB instance
+            </summary>
+            <param name="context">Cake context</param>
+            <param name="instanceName">Instance name to delete</param>
+            <example>
+            <code>
+                #addin "nuget:?package=Cake.SqlServer"
+            
+                Task("Delete-LocalDB")
+                     .Does(() =>
+                     {
+                        LocalDbDeleteInstance("Cake-Test");
+                    });
+            </code>
+            </example>        
+        </member>
+        <member name="M:Cake.SqlServer.LocalDbAliases.LocalDbStartInstance(Cake.Core.ICakeContext,System.String)">
+            <summary>
+            Starts the LocalDB instance. Instance must exist before you can start it.
+            </summary>
+            <param name="context">Cake context</param>
+            <param name="instanceName">Name of the instance to start</param>
+            <example>
+            <code>
+                #addin "nuget:?package=Cake.SqlServer"
+            
+                Task("Start-LocalDB")
+                     .Does(() =>
+                     {
+                        LocalDbStartInstance("Cake-Test");
+                    });
+            </code>
+            </example>        
+        </member>
+        <member name="M:Cake.SqlServer.LocalDbAliases.LocalDbStopInstance(Cake.Core.ICakeContext,System.String)">
+            <summary>
+            Stops the LocalDB instance.
+            </summary>
+            <param name="context">Cake context</param>
+            <param name="instanceName">Name of the instance to stop</param>
+            <example>
+            <code>
+                #addin "nuget:?package=Cake.SqlServer"
+            
+                Task("Stop-LocalDB")
+                     .Does(() =>
+                     {
+                        LocalDbStopInstance("Cake-Test");
+                    });
+            </code>
+            </example>  
+        </member>
+        <member name="T:Cake.SqlServer.LocalDbVersion">
+            <summary>
+            Version of LocalDB
+            </summary>
+        </member>
+        <member name="F:Cake.SqlServer.LocalDbVersion.V11">
+            <summary>
+            Represents v11 of LocalDB
+            </summary>
+        </member>
+        <member name="F:Cake.SqlServer.LocalDbVersion.V12">
+            <summary>
+            Represents v12 of LocalDB
+            </summary>
+        </member>
+        <member name="T:Cake.SqlServer.SqlServerAliases">
+            <summary>
+            <para>
+            Contains functionality to deal with SQL Server: DropDatabase, CreateDatabase, execute SQL, execute SQL from files, etc. 
+            Also provides functionality to manage LocalDb instances: Create, Start, Stop, Delete instances.
+            </para>
+            <para>
+            In order to use the commands for this addin, include the following in your build.cake file to download and
+            reference from NuGet.org:
+            <code>
+                #addin "nuget:?package=Cake.SqlServer"
+            </code>
+            </para>
+            </summary>
+        </member>
+        <member name="M:Cake.SqlServer.SqlServerAliases.DropDatabase(Cake.Core.ICakeContext,System.String,System.String)">
+            <summary>
+            Drops database. Before dropping the DB, database is set to be offline, then online again.
+            This is to be sure that there are no live connections, otherwise the script will fail.
+            Also if the database does not exist - it will not do anything.
+            </summary>
+            <param name="context">The Cake context.</param>
+            <param name="connectionString">The connection string. For this operation, it is recommended to connect to the master database (default). If there are changing parameters, <see cref="T:System.Data.SqlClient.SqlConnectionStringBuilder"/> is recommended to escape input.</param>
+            <param name="databaseName">Database name to be dropped</param>
+            <example>
+            <code>
+                #addin "nuget:?package=Cake.SqlServer"
+            
+                Task("Drop-Database")
+                     .Does(() =>
+                     {
+                        var connectionString = @"Server=(LocalDb)\v12.0";
+                        var dbName = "CakeTest";
+                        DropDatabase(connectionString, dbName);
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Cake.SqlServer.SqlServerAliases.CreateDatabase(Cake.Core.ICakeContext,System.String,System.String)">
+            <summary>
+            Creates an empty database. If database with this name already exists, throws a SqlException.
+            <see cref="M:Cake.SqlServer.SqlServerAliases.CreateDatabaseIfNotExists(Cake.Core.ICakeContext,System.String,System.String)"/> if you would like to check if database already exists.
+            </summary>
+            <param name="context">The Cake context</param>
+            <param name="connectionString">The connection string. For this operation, it is recommended to connect to the master database (default). If there are changing parameters, <see cref="T:System.Data.SqlClient.SqlConnectionStringBuilder"/> is recommended to escape input.</param>
+            <param name="databaseName">Database name to be created</param>
+            <example>
+            <code>
+                #addin "nuget:?package=Cake.SqlServer"
+            
+                Task("Create-Database")
+                     .Does(() =>
+                     {
+                        var connectionString = @"Server=(LocalDb)\v12.0";
+                        var dbName = "CakeTest";
+                        CreateDatabase(connectionString, dbName);
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Cake.SqlServer.SqlServerAliases.CreateDatabaseIfNotExists(Cake.Core.ICakeContext,System.String,System.String)">
+            <summary>
+            Creates an empty database if another database with the same does not already exist.
+            </summary>
+            <param name="context">The Cake context</param>
+            <param name="connectionString">The connection string. For this operation, it is recommended to connect to the master database (default). If there are changing parameters, <see cref="T:System.Data.SqlClient.SqlConnectionStringBuilder"/> is recommended to escape input.</param>
+            <param name="databaseName">Database name to be created</param>
+            <example>
+            <code>
+                #addin "nuget:?package=Cake.SqlServer"
+            
+                Task("Create-Database-If-Not-Exists")
+                     .Does(() =>
+                     {
+                        var connectionString = @"Server=(LocalDb)\v12.0";
+                        var dbName = "CakeTest";
+                        CreateDatabaseIfNotExists(connectionString, dbName);
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Cake.SqlServer.SqlServerAliases.DropAndCreateDatabase(Cake.Core.ICakeContext,System.String,System.String)">
+             <summary>
+             First drops, then recreates the database
+             </summary>
+             <param name="context">The Cake context.</param>
+             <param name="connectionString">The connection string. For this operation, it is recommended to connect to the master database (default). If there are changing parameters, <see cref="T:System.Data.SqlClient.SqlConnectionStringBuilder"/> is recommended to escape input.</param>
+             <param name="databaseName">Database to be dropped and re-created</param>
+             <example>
+             <code>
+                 #addin "nuget:?package=Cake.SqlServer"
+            
+                 Task("ReCreate-Database")
+                      .Does(() =>
+                      {
+                         var connectionString = @"Server=(LocalDb)\v12.0";
+                         var dbName = "CakeTest";
+                         DropAndCreateDatabase(connectionString, dbName);
+                     });
+             </code>
+             </example>
+        </member>
+        <member name="M:Cake.SqlServer.SqlServerAliases.ExecuteSqlCommand(Cake.Core.ICakeContext,System.String,System.String)">
+            <summary>
+            Execute any SQL command.
+            </summary>
+            <param name="context">The Cake context.</param>
+            <param name="connectionString">The connection string. You may want to specify Initial Catalog. If there are changing parameters, <see cref="T:System.Data.SqlClient.SqlConnectionStringBuilder"/> is recommended to escape input.</param>
+            <param name="sqlCommands">SQL to be executed</param>
+            <example>
+            <code>
+                #addin "nuget:?package=Cake.SqlServer"
+            
+                Task("Sql-Operations")
+                    .Does(() =>
+                    {
+                        var connectionString = @"Data Source=(LocalDb)\v12.0;Initial Catalog=MyDatabase";
+                        var sqlCommand = "create table [CakeTest].dbo.[CakeTestTable] (id int null)";
+                        ExecuteSqlCommand(connectionString, sqlCommand);
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Cake.SqlServer.SqlServerAliases.ExecuteSqlCommand(Cake.Core.ICakeContext,System.Data.SqlClient.SqlConnection,System.String)">
+            <summary>
+            Execute any SQL command.
+            </summary>
+            <param name="context">The Cake context.</param>
+            <param name="connection">The connection to use. The connection must be open. See <see cref="M:Cake.SqlServer.SqlServerAliases.OpenSqlConnection(Cake.Core.ICakeContext,System.String)"/>.</param>
+            <param name="sqlCommands">SQL to be executed</param>
+            <example>
+            <code>
+                #addin "nuget:?package=Cake.SqlServer"
+            
+                Task("Sql-Operations")
+                    .Does(() =>
+                    {
+                        using (var connection = OpenSqlConnection(@"Data Source=(LocalDb)\v12.0;Initial Catalog=MyDatabase"))
+                        {
+                            ExecuteSqlCommand(connection, "create table [CakeTest].dbo.[CakeTestTable] (id int null)");
+                            ExecuteSqlCommand(connection, "...");
+                        }
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Cake.SqlServer.SqlServerAliases.ExecuteSqlFile(Cake.Core.ICakeContext,System.String,Cake.Core.IO.FilePath)">
+            <summary>
+            Reads SQL commands from a file and executes them.
+            </summary>
+            <param name="context">The Cake context.</param>
+            <param name="connectionString">The connection string. You may want to specify Initial Catalog. If there are changing parameters, <see cref="T:System.Data.SqlClient.SqlConnectionStringBuilder"/> is recommended to escape input.</param>
+            <param name="sqlFile">Path to a file with SQL commands.</param>
+            <example>
+            <code>
+                #addin "nuget:?package=Cake.SqlServer"
+            
+                Task("Sql-Operations")
+                    .Does(() =>
+                    {
+                        var connectionString = @"Data Source=(LocalDb)\v12.0;Initial Catalog=MyDatabase";
+                        var sqlFile = "./somePath/MyScript.sql";
+                        ExecuteSqlCommand(connectionString, sqlFile);
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Cake.SqlServer.SqlServerAliases.ExecuteSqlFile(Cake.Core.ICakeContext,System.Data.SqlClient.SqlConnection,Cake.Core.IO.FilePath)">
+             <summary>
+             Reads SQL commands from a file and executes them.
+             </summary>
+             <param name="context">The Cake context.</param>
+             <param name="connection">The connection to use. The connection must be open. See <see cref="M:Cake.SqlServer.SqlServerAliases.OpenSqlConnection(Cake.Core.ICakeContext,System.String)"/>.</param>
+             <param name="sqlFile">Path to a file with SQL commands.</param>
+             <example>
+             <code>
+                 #addin "nuget:?package=Cake.SqlServer"
+            
+                 Task("Sql-Operations")
+                     .Does(() =>
+                     {
+                         using (var connection = OpenSqlConnection(@"Data Source=(LocalDb)\v12.0;Initial Catalog=MyDatabase"))
+                         {
+                             ExecuteSqlFile(connection, "./somePath/MyScript.sql");
+                             ExecuteSqlFile(connection, "./somePath/MyOtherScript.sql");
+                         }
+                     });
+             </code>
+             </example>
+        </member>
+        <member name="M:Cake.SqlServer.SqlServerAliases.OpenSqlConnection(Cake.Core.ICakeContext,System.String)">
+             <summary>
+             Opens a new <see cref="T:System.Data.SqlClient.SqlConnection"/> with the given connection string.
+             </summary>
+             <param name="context">The Cake context.</param>
+             <param name="connectionString">The connection string. You may want to specify Initial Catalog. If there are changing parameters, <see cref="T:System.Data.SqlClient.SqlConnectionStringBuilder"/> is recommended to escape input.</param>
+             <example>
+             <code>
+                 #addin "nuget:?package=Cake.SqlServer"
+            
+                 Task("Sql-Operations")
+                     .Does(() =>
+                     {
+                         using (var connection = OpenSqlConnection(@"Data Source=(LocalDb)\v12.0;Initial Catalog=MyDatabase"))
+                         {
+                             ExecuteSqlCommand(connection, "...");
+                             ExecuteSqlFile(connection, "./somePath/MyScript.sql");
+                         }
+                     });
+             </code>
+             </example>
+        </member>
+    </members>
+</doc>
