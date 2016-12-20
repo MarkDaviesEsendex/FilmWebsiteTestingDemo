@@ -1,7 +1,9 @@
-﻿namespace FilmWishlist.Service
+﻿using FilmWishlist.Models;
+
+namespace FilmWishlist.Service
 {
     public interface IFilmDescriptionService
     {
-        string Get(string title, string year);
+        APIFilm GetFilm(string title, string year);
     }
 }

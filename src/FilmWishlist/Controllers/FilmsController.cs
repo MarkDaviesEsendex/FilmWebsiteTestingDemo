@@ -24,7 +24,8 @@ namespace FilmWishlist.Controllers
         public ActionResult Details(string name, string year) => View("Details", new FilmDetailsViewModel
         {
             FilmName = $"{name} ({year})",
-            FilmDescription = _descriptionService.Get(name, year)
+            FilmDescription = _descriptionService.GetFilm(name, year).Description,
+            FilmPosterUrl = _descriptionService.GetFilm(name, year).PosterUrl
         });
     }
 }

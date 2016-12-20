@@ -7,9 +7,9 @@ namespace ContractTests
     {
         public IEnumerator GetEnumerator()
         {
-            yield return Environment.GetEnvironmentVariable("ContractTestRealServices") == "true"
-                ? "http://www.omdbapi.com/"
-                : "http://localhost:5842/";
+            //            yield return Environment.GetEnvironmentVariable("ContractTestRealServices") == "true"
+            yield return  "http://www.omdbapi.com/";
+//                : "http://localhost:5842/";
         }
     }
 }

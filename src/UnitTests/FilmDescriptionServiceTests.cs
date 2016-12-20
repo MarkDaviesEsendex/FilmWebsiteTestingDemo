@@ -15,11 +15,12 @@ namespace UnitTests
             var repository = new Mock<IFilmDescriptionRepository>();
             repository
                 .Setup(r => r.GetDescriptionResult("Title", "2012"))
-                .Returns(new GetDescriptionRepositoryResult {Result = RepositoryResult.Successful, Value = "Description"});
+                .Returns(new GetDescriptionRepositoryResult {Result = RepositoryResult.Successful, Film = new APIFilm("Description", "")});
 
             var service = new FilmDescriptionService(repository.Object);
 
-            Assert.That(service.Get("Title", "2012"), Is.EqualTo("Description"));
+            var apiFilm = service.GetFilm("Title", "2012");
+            Assert.That(apiFilm.Description, Is.EqualTo("Description"));
         }
 
         [Test]
@@ -32,7 +33,8 @@ namespace UnitTests
 
             var service = new FilmDescriptionService(repository.Object);
 
-            Assert.That(service.Get("Title", "2012"), Is.EqualTo("No description found."));
+            var apiFilm = service.GetFilm("Title", "2012");
+            Assert.That(apiFilm.Description, Is.EqualTo("No description found."));
         }
     }
 }

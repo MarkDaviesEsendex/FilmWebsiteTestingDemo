@@ -29,11 +29,18 @@ namespace FilmWishlist.Repositories
         private static GetDescriptionRepositoryResult GetDescriptionRepositoryResult(IRestResponse<OmdbApiFilmResponse> response) =>
             response.Data.Plot == null
                 ? FailedResult()
-                : SuccessResult(response.Data.Plot);
+                : SuccessResult(response.Data.Plot, response.Data.Poster);
 
         private RestClient Client() => new RestClient(_url);
         private IRestResponse<OmdbApiFilmResponse> Response(string title, string year) => Client().Execute<OmdbApiFilmResponse>(Request(title, year));
-        private static GetDescriptionRepositoryResult SuccessResult(string plot) => new GetDescriptionRepositoryResult {Result = RepositoryResult.Successful, Value = plot};
+
+        private static GetDescriptionRepositoryResult SuccessResult(string plot, string poster)
+            =>
+                new GetDescriptionRepositoryResult
+                {
+                    Result = RepositoryResult.Successful,
+                    Film = new APIFilm(plot, poster)
+                };
         private static GetDescriptionRepositoryResult FailedResult() => new GetDescriptionRepositoryResult {Result = RepositoryResult.Failed};
     }
 }

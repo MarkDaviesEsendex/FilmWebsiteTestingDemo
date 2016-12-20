@@ -48,6 +48,7 @@
     <Compile Include="ApplicationSetup.cs" />
     <Compile Include="BrowserContext.cs" />
     <Compile Include="DetailsPage\DetailsPageTests.cs" />
+    <Compile Include="FilmListPage\FilmListPageTests.cs" />
     <Compile Include="HomePage\AddFilmOnHomepageTests.cs" />
     <Compile Include="HomePage\FilmListIsVisibleOnHomepageTests.cs" />
     <Compile Include="PageModel\DetailsPage.cs" />

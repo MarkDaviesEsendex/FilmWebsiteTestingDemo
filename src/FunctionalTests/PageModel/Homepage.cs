@@ -31,5 +31,9 @@ namespace FunctionalTests.PageModel
         private IWebElement DuplicateError() => FindElementByCssSelector(".alert-warning");
 
         private IWebElement FindElementByCssSelector(string cssSelector) => _driver.FindElementByCssSelector(cssSelector);
+
+        public void ClickLinkToListPage() => FilmListLink().Click();
+
+        private IWebElement FilmListLink() => FindElementByCssSelector("a[href='/list']");
     }
 }

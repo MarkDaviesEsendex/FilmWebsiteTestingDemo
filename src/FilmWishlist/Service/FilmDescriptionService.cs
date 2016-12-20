@@ -12,11 +12,11 @@ namespace FilmWishlist.Service
             _repository = repository;
         }
 
-        public string Get(string title, string year) => Description(_repository.GetDescriptionResult(title, year));
+        public APIFilm GetFilm(string title, string year) => Film(_repository.GetDescriptionResult(title, year));
 
-        private static string Description(GetDescriptionRepositoryResult result) =>
+        private static APIFilm Film(GetDescriptionRepositoryResult result) =>
             result.Result == RepositoryResult.Failed
-                ? "No description found."
-                : result.Value;
+                ? new APIFilm("No description found.", "No Poster Found")
+                : result.Film;
     }
 }

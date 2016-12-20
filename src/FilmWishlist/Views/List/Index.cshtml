@@ -1,0 +1,9 @@
+﻿@model FilmWishlist.Models.HomePageViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+<div class="row">
+    <div class="col-md-8">
+        @{ Html.RenderPartial("FilmList", Model.FilmListViewModel); }
+    </div>
+</div>

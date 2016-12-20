@@ -4,5 +4,6 @@
     {
         public string FilmName { get; set; }
         public string FilmDescription { get; set; }
+        public string FilmPosterUrl { get; set; }
     }
 }
